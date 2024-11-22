@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>気分トラッカー</h1>
+    <form id="moodForm">
+        <input type="text" id="moodInput" name="moodInput" placeholder="今日の気分を入力">
+        <button type="submit">追加</button>
+    </form>
+    <h2>過去の記録</h2>
+    <div id="moodHistory">
+        {% for mood in moods %}
+            <div>{{ mood.mood_text }}</div>
+        {% endfor %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
