@@ -1,23 +1,25 @@
-$(document).ready(function() {
-    $('#moodForm').submit(function(event) {
-        event.preventDefault();  // フォームのデフォルトの送信を防ぐ
+document.getElementById('moodForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // フォーム送信を無効化
 
-        var moodInput = $('#moodInput').val();  // 入力値を取得
+    const moodInput = document.getElementById('moodInput');
+    const moodText = moodInput.value;
 
-        $.ajax({
-            url: '/add',  // サーバーのエンドポイント
-            type: 'POST',  // POSTリクエストを送信
-            data: { moodInput: moodInput },  // データをサーバーに送信
-            success: function(response) {
-                // サーバーからのレスポンスを利用して過去の記録に追加
-                var moodText = response.mood;
-                var moodEntry = $('<div>').text(moodText);
-                $('#moodHistory').append(moodEntry);  // 新しい気分を履歴に追加
-                $('#moodInput').val('');  // 入力フィールドをクリア
-            },
-            error: function() {
-                alert('エラーが発生しました。もう一度試してください。');
-            }
-        });
-    });
+    fetch('/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `moodInput=${encodeURIComponent(moodText)}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        const moodList = document.getElementById('moodList');
+        const newMood = document.createElement('li');
+        newMood.innerHTML = `${data.mood} - ${data.timestamp} 
+            <button class="delete-btn" data-id="">削除</button>
+            <button class="edit-btn" data-id="">編集</button>`;
+        moodList.insertBefore(newMood, moodList.firstChild);
+        moodInput.value = ''; // 入力フィールドをクリア
+    })
+    .catch(error => console.error('Error:', error));
 });

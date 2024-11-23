@@ -2,22 +2,28 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mood Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>気分トラッカー</h1>
+    <h1>今日の気分</h1>
     <form id="moodForm">
-        <input type="text" id="moodInput" name="moodInput" placeholder="今日の気分を入力">
+        <input type="text" id="moodInput" name="moodInput" placeholder="気分を入力してください" required>
         <button type="submit">追加</button>
     </form>
+
     <h2>過去の記録</h2>
-    <div id="moodHistory">
+    <ul id="moodList">
         {% for mood in moods %}
-            <div>{{ mood.mood_text }}</div>
+        <li id="mood-{{ mood.id }}">
+            {{ mood.mood_text }} - {{ mood.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+            <button class="delete-btn" data-id="{{ mood.id }}">削除</button>
+            <button class="edit-btn" data-id="{{ mood.id }}">編集</button>
+        </li>
         {% endfor %}
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </ul>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>
